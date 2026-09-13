@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IssueLink — Community Reports</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="resident">
+
+<header class="r-header">
+  <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="10" cy="10" r="5" fill="#2563EB"/>
+    <circle cx="30" cy="10" r="5" fill="#38BDF8"/>
+    <circle cx="10" cy="30" r="5" fill="#38BDF8"/>
+    <circle cx="30" cy="30" r="5" fill="#2563EB"/>
+    <circle cx="20" cy="20" r="6" fill="#0F172A"/>
+    <line x1="10" y1="10" x2="20" y2="20" stroke="#0F172A" stroke-width="2.5"/>
+    <line x1="30" y1="10" x2="20" y2="20" stroke="#0F172A" stroke-width="2.5"/>
+    <line x1="10" y1="30" x2="20" y2="20" stroke="#0F172A" stroke-width="2.5"/>
+    <line x1="30" y1="30" x2="20" y2="20" stroke="#0F172A" stroke-width="2.5"/>
+  </svg>
+  <div>
+    <h1>IssueLink</h1>
+    <p class="tag">Connecting Community Reports to Real Solutions.</p>
+  </div>
+</header>
+
+<nav class="r-nav">
+  <button data-tab="home" class="active"><i class="fa-solid fa-house"></i> Home</button>
+  <button data-tab="report"><i class="fa-solid fa-camera"></i> Report</button>
+  <button data-tab="issues"><i class="fa-solid fa-list-check"></i> Issues</button>
+  <button data-tab="track"><i class="fa-solid fa-magnifying-glass"></i> Track</button>
+</nav>
+
+<main class="r-main">
+
+  <!-- HOME -->
+  <section class="r-view" id="view-home">
+    <div class="r-card">
+      <h2>Report a Community Issue</h2>
+      <p>Spotted a pothole, flooding, a broken streetlight, or another public problem? Report it in minutes — no account needed.</p>
+      <button class="btn btn-primary" id="startReportBtn"><i class="fa-solid fa-plus"></i> New Report</button>
+      <button class="btn btn-outline" onclick="document.querySelector('[data-tab=issues]').click()"><i class="fa-solid fa-list-check"></i> Browse Public Issues</button>
+    </div>
+    <div class="r-card">
+      <h3><i class="fa-solid fa-circle-info"></i> How It Works</h3>
+      <p>Multiple residents may report the same real-world problem. IssueLink links related reports into a single consolidated <b>Issue</b>, so departments can prioritize and resolve the underlying problem — not just individual complaints.</p>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section class="r-view" id="view-report" style="display:none;">
+    <div class="r-card">
+      <div class="step-indicator">
+        <div class="dot active">1. Category</div>
+        <div class="dot">2. Details</div>
+        <div class="dot">3. Location</div>
+        <div class="dot">4. Evidence</div>
+        <div class="dot">5. Review</div>
+        <div class="dot">6. Done</div>
+      </div>
+
+      <div id="rp-step-1">
+        <h3>Select a Category <span class="req">*</span></h3>
+        <div class="cat-grid" id="catGrid"></div>
+        <br><button class="btn btn-primary" onclick="rpNext()">Next <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="rp-step-2" style="display:none;">
+        <h3>Details &amp; Severity</h3>
+        <label>Title <span class="req">*</span></label>
+        <input type="text" id="rpTitle" placeholder="e.g. Large pothole on Main St">
+        <label>Description <span class="req">*</span></label>
+        <textarea id="rpDesc" placeholder="Describe what you observed"></textarea>
+        <label>Severity <span class="req">*</span></label>
+        <div class="sev-grid" id="sevGrid">
+          <div class="sev-opt" data-sev="Low">Low</div>
+          <div class="sev-opt" data-sev="Medium">Medium</div>
+          <div class="sev-opt" data-sev="High">High</div>
+          <div class="sev-opt" data-sev="Critical">Critical</div>
+        </div>
+        <br><button class="btn btn-muted" onclick="rpBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary" onclick="rpNext()">Next <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="rp-step-3" style="display:none;">
+        <h3>Location <span class="req">*</span></h3>
+        <button class="btn btn-outline" id="useGpsBtn" type="button"><i class="fa-solid fa-location-crosshairs"></i> Use My Location</button>
+        <br><br>
+        <label>Latitude</label><input type="text" id="rpLat" readonly placeholder="Captured automatically">
+        <label>Longitude</label><input type="text" id="rpLon" readonly placeholder="Captured automatically">
+        <label>Address / Description</label>
+        <input type="text" id="rpLocationText" placeholder="e.g. Corner of Main St and 3rd Ave">
+        <button class="btn btn-muted" onclick="rpBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary" onclick="rpNext()">Next <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="rp-step-4" style="display:none;">
+        <h3>Photo Evidence <span class="req">*</span> (required)</h3>
+        <div class="photo-box">
+          <i class="fa-solid fa-camera" style="font-size:30px;color:#2563EB;"></i>
+          <p>Attach a clear photo of the issue.</p>
+          <input type="file" id="photoInput" accept="image/*" capture="environment">
+          <div id="photoPreviewWrap"></div>
+        </div>
+        <br><button class="btn btn-muted" onclick="rpBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary" onclick="rpNext()">Next <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div id="rp-step-5" style="display:none;">
+        <h3>Review Your Report</h3>
+        <div id="reviewBody"></div>
+        <br><button class="btn btn-muted" onclick="rpBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitReport()"><i class="fa-solid fa-paper-plane"></i> Submit Report</button>
+      </div>
+
+      <div id="rp-step-6" style="display:none;text-align:center;">
+        <i class="fa-solid fa-circle-check" style="font-size:46px;color:#16A34A;"></i>
+        <h3>Report Submitted!</h3>
+        <p>Your report code:</p>
+        <h2 id="doneCode" style="color:#2563EB;"></h2>
+        <p>Save this code to track your report's status.</p>
+        <button class="btn btn-primary" onclick="document.querySelector('[data-tab=home]').click()"><i class="fa-solid fa-house"></i> Back to Home</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ISSUES -->
+  <section class="r-view" id="view-issues" style="display:none;">
+    <div class="r-card">
+      <h2>Public Issues</h2>
+      <div class="filters-row">
+        <input type="text" id="fltKeyword" placeholder="Search keyword…">
+        <select id="fltCategory"><option value="">All Categories</option></select>
+        <select id="fltStatus">
+          <option value="">All Statuses</option>
+          <option>Reported</option><option>Under Review</option><option>Verified</option><option>Assigned</option><option>In Progress</option><option>Resolved</option><option>Reopened</option><option>Rejected</option>
+        </select>
+        <select id="fltPriority">
+          <option value="">All Priorities</option>
+          <option>Critical</option><option>High</option><option>Medium</option><option>Low</option>
+        </select>
+      </div>
+      <div class="issue-list" id="issueList"></div>
+    </div>
+  </section>
+
+  <!-- TRACK -->
+  <section class="r-view" id="view-track" style="display:none;">
+    <div class="r-card">
+      <h2>Track a Report</h2>
+      <label>Enter Report Code</label>
+      <div style="display:flex;gap:10px;">
+        <input type="text" id="trackCode" placeholder="IL-RP-XXXXX" style="margin-bottom:0;">
+        <button class="btn btn-primary" id="trackBtn"><i class="fa-solid fa-magnifying-glass"></i> Track</button>
+      </div>
+      <div id="trackResult"></div>
+    </div>
+  </section>
+
+</main>
+
+<div id="modalRoot"></div>
+<script src="app.js"></script>
+</body>
+</html>
